@@ -1301,6 +1301,18 @@
       return barcode + (Math.abs(hash) % 10).toString(); // Add check digit
     }
 
+    function handleNameInput() {
+      const nameInput = document.getElementById('manualName');
+      const barcodeInput = document.getElementById('manualBarcode');
+      const name = nameInput.value.trim();
+      
+      if (name.length > 0) {
+        // Auto-generate barcode from product name
+        const generatedBarcode = generateBarcodeFromName(name);
+        barcodeInput.value = generatedBarcode;
+      }
+    }
+
     async function handleFile(evt) {
       const file = evt.target.files?.[0];
       if (!file) return;
@@ -2274,7 +2286,7 @@
           <button class="primary" onclick="startCameraScanner('manualBarcode')" style="padding: 10px 20px; white-space: nowrap;">Scan</button>
         </div>
         <label for="manualName">Product Name</label>
-        <input type="text" id="manualName" placeholder="Enter name..." />
+        <input type="text" id="manualName" placeholder="Enter name..." oninput="handleNameInput()" />
         <label for="manualPrice">Price ($)</label>
         <input type="text" id="manualPrice" placeholder="0.00" />
         <div class="actions-group">
