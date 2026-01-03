@@ -391,6 +391,12 @@
       overflow: hidden;
     }
 
+    /* Smaller font for long product names */
+    .label .name.long-name {
+      font-size: 9pt;
+      line-height: 1.0;
+    }
+
     .label .barcode-container {
       display: flex;
       justify-content: center;
@@ -408,7 +414,7 @@
     }
 
     .label .price { 
-      font-size: 20pt; 
+      font-size: 24pt; 
       font-weight: 900; 
       text-align: center; 
       color: #000;
@@ -824,6 +830,11 @@
         overflow: hidden !important;
       }
 
+      .label .name.long-name {
+        font-size: 9pt !important;
+        line-height: 1.0 !important;
+      }
+
       .label .barcode-container {
         display: flex !important;
         justify-content: center !important;
@@ -843,7 +854,7 @@
       }
 
       .label .price {
-        font-size: 20pt !important;
+        font-size: 24pt !important;
         font-weight: 900 !important;
         text-align: center !important;
         color: #000 !important;
@@ -1232,8 +1243,9 @@
           const div = document.createElement('div');
           div.className = 'label';
           const svgId = `svg_${q.barcode}_${i}_${Math.random().toString(36).slice(2)}`;
+          const nameClass = q.name.length > 30 ? 'name long-name' : 'name';
           div.innerHTML = `
-            <div class="name">${q.name.toUpperCase()}</div>
+            <div class="${nameClass}">${q.name.toUpperCase()}</div>
             <div class="price">$${sanitizePrice(q.price)}</div>
             <div class="barcode-container">
               <svg id="${svgId}" class="barcode" data-barcode="${q.barcode}"></svg>
