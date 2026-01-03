@@ -1783,6 +1783,14 @@
       exportLabelsAsPdf();
     }
 
+    // Close label preview after printing from main window
+    window.addEventListener('afterprint', () => {
+      labelsGrid.innerHTML = '';
+      labelsGrid.style.display = 'none';
+      const queueActions = document.querySelector('.queue-card .print-actions');
+      if (queueActions) queueActions.style.display = 'flex';
+    });
+
     function printAllQueueLabels() {
       if (queue.length === 0) {
         alert('Please add products to the queue first!');
@@ -1971,7 +1979,13 @@
         });
         
         pdfWin.focus();
-        setTimeout(() => pdfWin.print(), 100);
+        setTimeout(() => {
+          pdfWin.print();
+          // Close preview window after print dialog closes
+          pdfWin.onafterprint = () => {
+            pdfWin.close();
+          };
+        }, 100);
       }, 500);
     }
 
