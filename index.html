@@ -417,6 +417,38 @@
       line-height: 1;
     }
 
+    /* Mobile-friendly label preview (screen only) */
+    @media screen and (max-width: 768px) {
+      .labels-card {
+        overflow-x: auto;
+      }
+
+      #labelsGrid,
+      .labels-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        padding: 12px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .label {
+        width: 100%;
+        min-width: 220px;
+        height: auto;
+        min-height: 120px;
+      }
+
+      .label .name {
+        max-height: none;
+        white-space: normal;
+      }
+
+      .label .barcode {
+        height: 28px;
+      }
+    }
+
     .label .sku {
       font-size: 8pt;
       text-align: center;
@@ -1166,6 +1198,23 @@
 
     function renderLabels() {
       labelsGrid.innerHTML = '';
+      labelsGrid.style.display = 'grid';
+
+      // Add back button for mobile print preview
+      if (window.innerWidth < 768) {
+        const backBtn = document.createElement('button');
+        backBtn.textContent = 'Back to Queue';
+        backBtn.className = 'primary';
+        backBtn.style.cssText = 'position: sticky; top: 20px; width: 100%; margin-bottom: 20px; z-index: 10;';
+        backBtn.onclick = () => {
+          labelsGrid.innerHTML = '';
+          labelsGrid.style.display = 'none';
+          const queueActions = document.querySelector('.queue-card .print-actions');
+          if (queueActions) queueActions.style.display = 'flex';
+        };
+        labelsGrid.appendChild(backBtn);
+      }
+
       for (const q of queue) {
         // Only render if selected for print or if no selection yet (show all)
         if (selectedForPrint.size > 0 && !selectedForPrint.has(q.barcode)) {
@@ -1206,6 +1255,9 @@
           }
         }
       }
+
+      // Save selected items to localStorage for persistence
+      localStorage.setItem('gulistanSelectedItems', JSON.stringify(Array.from(selectedForPrint)));
     }
 
     function generateBarcodeFromName(name) {
@@ -2039,6 +2091,19 @@
         
         // Try auto-load from products.txt if served
         autoLoadProducts();
+      }
+
+      // Restore selected items from localStorage (per-device session)
+      const savedSelections = localStorage.getItem('gulistanSelectedItems');
+      if (savedSelections) {
+        try {
+          const savedArray = JSON.parse(savedSelections);
+          if (Array.isArray(savedArray)) {
+            savedArray.forEach(item => selectedForPrint.add(item));
+          }
+        } catch (err) {
+          console.warn('Unable to restore saved selections', err);
+        }
       }
       
       renderQueue();

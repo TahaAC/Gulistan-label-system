@@ -423,6 +423,38 @@
       line-height: 1;
     }
 
+    /* Mobile-friendly label preview (screen only) */
+    @media screen and (max-width: 768px) {
+      .labels-card {
+        overflow-x: auto;
+      }
+
+      #labelsGrid,
+      .labels-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        padding: 12px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .label {
+        width: 100%;
+        min-width: 220px;
+        height: auto;
+        min-height: 120px;
+      }
+
+      .label .name {
+        max-height: none;
+        white-space: normal;
+      }
+
+      .label .barcode {
+        height: 28px;
+      }
+    }
+
     .label .sku {
       font-size: 8pt;
       text-align: center;
@@ -1172,6 +1204,7 @@
 
     function renderLabels() {
       labelsGrid.innerHTML = '';
+      labelsGrid.style.display = 'grid';
       
       // Add back button for mobile print preview
       if (window.innerWidth < 768) {
@@ -1182,7 +1215,8 @@
         backBtn.onclick = () => {
           labelsGrid.innerHTML = '';
           labelsGrid.style.display = 'none';
-          document.querySelector('.print-actions').style.display = 'flex';
+          const queueActions = document.querySelector('.queue-card .print-actions');
+          if (queueActions) queueActions.style.display = 'flex';
         };
         labelsGrid.appendChild(backBtn);
       }
