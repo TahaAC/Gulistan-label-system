@@ -781,6 +781,7 @@
         box-shadow: none !important;
       }
 
+      #labelsGrid,
       .labels-grid { 
         display: grid !important;
         grid-template-columns: repeat(3, 63.5mm) !important;
@@ -798,6 +799,10 @@
       .label {
         width: 63.5mm !important;
         height: 28.1mm !important;
+        min-width: 63.5mm !important;
+        max-width: 63.5mm !important;
+        min-height: 28.1mm !important;
+        max-height: 28.1mm !important;
         background: white !important;
         border: 1px solid #000 !important;
         border-radius: 0 !important;
@@ -838,6 +843,8 @@
       .label .barcode {
         width: 100% !important;
         height: 6mm !important;
+        min-height: 6mm !important;
+        max-height: 6mm !important;
         display: block !important;
       }
 
